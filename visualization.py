@@ -144,5 +144,118 @@ JoinLayer(X1,Y1,X2,Y2)
 JoinLayer(X2,Y2,X3,Y3)
 
 
+
+
+
+import numpy as np
+
+
+
+
+
+# Artificial Neural Network :  
+
+'''
+Suppose you want to predict your test score
+from input given as :
+
+    X = [Number of hours you study , Number of hours you sleep]
+    Y = [Test on score out of 100]
+
+X - Input :
+
+-> X = [Number of hours you study , Number of hours you sleep]
+
+Y - Output :
+    
+-> Y = [Test Score]
+
+'''
+
+X = np.array(([3, 5], [5, 1], [10, 2]), dtype = float)
+
+Y = np.array(([75], [82], [93]), dtype = float)
+
+
+
+text = "Input data\n\t\t \t\t \t\t X(Study(Hours))\t X(Sleep(Hours)) \t\t Y(Marks)"
+
+pt = Point(670,100)
+label = Text(pt, text)
+label.setSize(10)
+label.setStyle("bold")
+label.draw(win)
+
+
+xx = []
+xx.append(np.amax(X, axis=0))
+
+text = "\n\n Normalized data \nAfter Scaling \n\n\n \t\t\t\t \t\t X(Study(Hours))\t X(Sleep(Hours)) \t\t Y(Marks)\n \t\t\t\t X=X/"+str(xx[0][0])+" \t X=X/"+str(xx[0][1])
+
+
+pt = Point(670,300)
+label = Text(pt, text)
+label.setSize(10)
+label.setStyle("bold")
+label.draw(win)
+
+
+text = "Y=Y/100"
+
+pt = Point(980,355)
+label = Text(pt, text)
+label.setSize(10)
+label.setStyle("bold")
+label.draw(win)
+
+
+
+def printData(X,Y,YPos):
+    for i in range(0,len(X)):
+        for j in range(0,2):
+            
+            pt = Point(750+100*j,YPos+i*50)
+            text = str(X[i][j])
+            
+            text += "\t\t"
+            label = Text(pt, text)
+            label.setSize(10)
+            label.setStyle("bold")
+            label.draw(win)
+
+    for i in range(0,len(Y)):
+        for j in range(0,1):
+            
+            pt = Point(1000+100*j,YPos+i*50)
+            text = str(Y[i][j])
+            
+            text += "\t\t"
+            label = Text(pt, text)
+            label.setSize(10)
+            label.setStyle("bold")
+            label.draw(win)
+
+        
+    
+
+printData(X,Y,150)
+
+'''
+
+Normalization by scaling our Data :
+
+X = X/max(X)
+
+Y = Y/max(Y), where max(Y) is given as 100
+
+'''
+
+
+X /= np.amax(X, axis=0)
+Y /= 100
+
+printData(X,Y,400)
+
+
 win.getMouse()
 win.close()
