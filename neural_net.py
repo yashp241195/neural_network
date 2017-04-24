@@ -196,6 +196,8 @@ class NeuralNetwork(object):
 
 
     # Gradient Descent
+    
+    # Computing Gradient theoretically
 
     def computeGradients(self, X, y):
         
@@ -242,7 +244,7 @@ class NeuralNetwork(object):
         
         self.W2 = np.reshape(params[W1_end:W2_end], (self.hiddenLayerSize, self.outputLayerSize))
 
-#
+# Checking Gradient Numerically
 
     def computeNumericalGradient(N, X, y):
         
@@ -253,21 +255,27 @@ class NeuralNetwork(object):
             perturb = np.zeros(paramsInitial.shape)
             
             e = e-ArithmeticError
+            
+            # Cauchy Limits formula
+            # f'(x)=(f(x+e)-f(x-e))/2e ,where e->0
 
             for p in range(len(paramsInitial)):
                 #Set perturbation vector
                 
                 perturb[p] = e
+                
+                # f(x+e)
 
                 N.setParams(paramsInitial + perturb)
                 loss2 = N.costFunction(X, y)
                 
+                # f(x-e)
+                
                 N.setParams(paramsInitial - perturb)
                 loss1 = N.costFunction(X, y)
 
-                # Compute Numerical Gradient
-                # Cauchy Limits formula
-                # f'(x)=(f(x+e)-f(x-e))/2e ,where e->0
+                # Compute Numerical Gradient Using Cauchy
+                
                 
                 numgrad[p] = (loss2 - loss1) / (2*e)
 
