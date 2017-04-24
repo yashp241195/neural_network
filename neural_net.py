@@ -152,14 +152,18 @@ class NeuralNetwork(object):
 
     def costFunction(self, X, Y):
 
-        #Compute cost for given X,y, use weights already stored in class.
+        # Compute cost for given X,y, use weights already stored in class.
         self.yHat = self.forward(X)
+
+        # Normalizing the cost Function
         
         J = 0.5*sum((Y-self.yHat)**2)
 
         return J
 
-    # Computing dJ/dW1 and dJ/dW2 for minimization
+    # Backpropogation of errors 
+
+    # Computing partial derrivatives dJ/dW1 and dJ/dW2 for minimization
 
     def costFunctionPrime(self, X, y):
         
@@ -178,7 +182,6 @@ class NeuralNetwork(object):
         
         return dJdW1, dJdW2
 
-
     # Activation Function 
     
     def activation_function(self, z):
@@ -190,6 +193,143 @@ class NeuralNetwork(object):
         
         #Gradient of sigmoid
         return np.exp(-z)/((1+np.exp(-z))**2)
+
+
+    # Gradient Descent
+
+    def computeGradients(self, X, y):
+        
+        dJdW1, dJdW2 = self.costFunctionPrime(X, y)
+
+        # ravel is used to convert 2D to 1D array
+        # In this we are using row wise Left to Right
+        # evaluation in order to 
+        # returning the concatinated single array
+
+        return np.concatenate((dJdW1.ravel(), dJdW2.ravel()))
+
+
+    # Roll W1 and W2 into single column
+
+    def getParams(self):
+        # Get W1 and W2 unrolled into vector:
+        # ravel is used to convert 2D to 1D array
+        # In this we are using row wise Left to Right
+        
+        params = np.concatenate((self.W1.ravel(), self.W2.ravel()))
+
+        return params
+
+    # Rollback W1 and W2 into it's initial conditions
+    # means W1 , W2 will be no more a 1D array it will
+    # reforms it's rows,col counts 2D array
+    
+    def setParams(self, params):
+        # Set W1 and W2 using single paramater vector.
+
+        # reshaping the W1 and W2 in their initial conditions
+        W1_start = 0
+
+        W1_end = self.hiddenLayerSize * self.inputLayerSize
+
+        # reshaping W1
+        
+        self.W1 = np.reshape(params[W1_start:W1_end], (self.inputLayerSize , self.hiddenLayerSize))
+        
+        W2_end = W1_end + self.hiddenLayerSize*self.outputLayerSize
+
+        # reshaping W2
+        
+        self.W2 = np.reshape(params[W1_end:W2_end], (self.hiddenLayerSize, self.outputLayerSize))
+
+#
+
+    def computeNumericalGradient(N, X, y):
+        
+            paramsInitial = N.getParams()
+            
+            numgrad = np.zeros(paramsInitial.shape)
+            
+            perturb = np.zeros(paramsInitial.shape)
+            
+            e = 1e-ArithmeticError
+
+            for p in range(len(paramsInitial)):
+                #Set perturbation vector
+                
+                perturb[p] = e
+
+                N.setParams(paramsInitial + perturb)
+                loss2 = N.costFunction(X, y)
+                
+                N.setParams(paramsInitial - perturb)
+                loss1 = N.costFunction(X, y)
+
+                # Compute Numerical Gradient
+                # Cauchy Limits formula
+                # f'(x)=(f(x+e)-f(x-e))/2e ,where e->0
+                
+                numgrad[p] = (loss2 - loss1) / (2*e)
+
+                #Return the value we changed to zero:
+                perturb[p] = 0
+                
+            #Return Params to original value:
+            N.setParams(paramsInitial)
+
+            return numgrad
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## ----------------------- Part 6 ---------------------------- ##
+from scipy import optimize
+
+
+class trainer(object):
+    def __init__(self, N):
+        #Make Local reference to network:
+        self.N = N
+        
+    def callbackF(self, params):
+        self.N.setParams(params)
+        self.J.append(self.N.costFunction(self.X, self.y))   
+        
+    def costFunctionWrapper(self, params, X, y):
+        self.N.setParams(params)
+        cost = self.N.costFunction(X, y)
+        grad = self.N.computeGradients(X,y)
+        return cost, grad
+        
+    def train(self, X, y):
+        #Make an internal variable for the callback function:
+        self.X = X
+        self.y = y
+
+        #Make empty list to store costs:
+        self.J = []
+        
+        params0 = self.N.getParams()
+
+        options = {'maxiter': 200, 'disp' : True}
+        _res = optimize.minimize(self.costFunctionWrapper, params0, jac=True, method='BFGS', \
+                                 args=(X, y), options=options, callback=self.callbackF)
+
+        self.N.setParams(_res.x)
+        self.optimizationResults = _res
+
+    
 
     
 
