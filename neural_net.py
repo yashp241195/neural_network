@@ -252,7 +252,7 @@ class NeuralNetwork(object):
             
             perturb = np.zeros(paramsInitial.shape)
             
-            e = 1e-ArithmeticError
+            e = e-ArithmeticError
 
             for p in range(len(paramsInitial)):
                 #Set perturbation vector
