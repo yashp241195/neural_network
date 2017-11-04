@@ -1,6 +1,7 @@
+# One Hidden Layer
 
 class NeuralNetwork(object):
-    def __init__(self,i=2,h=3,o=1 ):
+    def __init__(self,inputs=2,hiddenLayerSize=3,outputs=1 ):
         # Define HyperParameters
 
         '''
@@ -12,11 +13,11 @@ class NeuralNetwork(object):
 
         1) Number of hours you study
         2) Number of hours you sleep
-        input Layer size must be 2
+        Input Layer size must be 2
 
         '''
 
-        self.inputLayerSize = i
+        self.inputLayerSize = inputs
 
         '''
         Hidden Layer Size I defined as 3,
@@ -25,7 +26,7 @@ class NeuralNetwork(object):
 
         '''
 
-        self.hiddenLayerSize = h
+        self.hiddenLayerSize = hiddenLayerSize
 
         '''
         Output Layer Size is 1 means
@@ -33,7 +34,7 @@ class NeuralNetwork(object):
 
         '''
 
-        self.outputLayerSize = o
+        self.outputLayerSize = outputs
 
         '''
         Weight matrix distribution is done by
@@ -65,51 +66,5 @@ class NeuralNetwork(object):
 
     # Forward Propogation :
 
-'''
-    def forward(self, X):
-        # Propagate inputs through network
-        # Matrix(z2) = Matrix(X) * Matrix(W1)
-
-        self.z2 = np.dot(X, self.W1)
-
-        # Applying Activation Function to each
-        # element of Matrix(z2) and storing answer
-        # inside a2
-
-        self.a2 = self.activation_function(self.z2)
-
-        # Matrix(z3) =  Matrix(a2) * Matrix(W2)
-
-        self.z3 = np.dot(self.a2, self.W2)
-
-        # yHat is the predicted Output Matrix
-        # for given input Matrix(X)
-
-
-        yHat = self.activation_function(self.z3)
-
-        return yHat
-'''
 
 nn = NeuralNetwork()
-print(nn.hiddenLayerSize)
-
-x = np.random.randn(4,3)
-for i in range(len(x)):
-    print("Col : i = ",i," : ",x[i]," : ")
-
-# plt.plot(x)
-# plt.ylabel('distribution')
-# plt.show()
-
-# row wise
-# zz = np.sum(x,axis=1)
-# print(zz)
-# col wise
-# zz = np.sum(x,axis=0)
-# print(zz)
-# zz = np.dot(zz,(1/len(zz)))
-#
-# print(zz)
-#
-# print(sum(zz))
