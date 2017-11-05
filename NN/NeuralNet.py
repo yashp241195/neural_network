@@ -67,6 +67,9 @@ class NeuralNetwork(object):
 
         self.W2 = np.random.randn(self.hiddenLayerSize, self.outputLayerSize)
 
+    # Activation function helps us to represent non linear functions in order to represent 
+    # complex phenomenon using neural nets otherwise it will be limited to the linear systems
+        
     def activation_function(self, z):
         # Applying sigmoid activation function
         return (1 / (1 + np.exp(-z)))
@@ -95,7 +98,8 @@ class NeuralNetwork(object):
         self.z3 = np.dot(self.a2, self.W2)
 
         # yHat is the predicted Output Matrix
-        # for given input Matrix(X) using random weighted Synapses W1,W2
+        # for given input Matrix(X) using 
+        # set of random weighted Synapse Matrices (W1,W2)
 
 
         yHat = self.activation_function(self.z3)
