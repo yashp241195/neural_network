@@ -1,8 +1,11 @@
-# One Hidden Layer
+import numpy as np
+# import matplotlib.pyplot as plt
+
 
 class NeuralNetwork(object):
-    def __init__(self,inputs=2,hiddenLayerSize=3,outputs=1 ):
-        # Define HyperParameters
+    def __init__(self, i=2, h=3, o=1):
+
+        # Define Parameters
 
         '''
         Input Layer size = Number of input
@@ -13,11 +16,11 @@ class NeuralNetwork(object):
 
         1) Number of hours you study
         2) Number of hours you sleep
-        Input Layer size must be 2
+        input Layer size must be 2
 
         '''
 
-        self.inputLayerSize = inputs
+        self.inputLayerSize = i
 
         '''
         Hidden Layer Size I defined as 3,
@@ -26,7 +29,7 @@ class NeuralNetwork(object):
 
         '''
 
-        self.hiddenLayerSize = hiddenLayerSize
+        self.hiddenLayerSize = h
 
         '''
         Output Layer Size is 1 means
@@ -34,7 +37,7 @@ class NeuralNetwork(object):
 
         '''
 
-        self.outputLayerSize = outputs
+        self.outputLayerSize = o
 
         '''
         Weight matrix distribution is done by
@@ -64,7 +67,37 @@ class NeuralNetwork(object):
 
         self.W2 = np.random.randn(self.hiddenLayerSize, self.outputLayerSize)
 
+    def activation_function(self, z):
+        # Applying sigmoid activation function
+        return (1 / (1 + np.exp(-z)))
+
+    def activation_function_derrivative(self, z):
+        # Gradient of sigmoid activation function
+        return np.exp(-z) / ((1 + np.exp(-z)) ** 2)
+
     # Forward Propogation :
 
+    def forward(self, X):
+        # Propagate "inputs(X)" to "hiddenLayer(z2)" through network
+        # using synapses "W1"
+        # Matrix(z2) = Matrix(X) * Matrix(W1)
 
-nn = NeuralNetwork()
+        self.z2 = np.dot(X, self.W1)
+
+        # Applying Activation Function to each neuron
+        # (element) of "hiddenLayer(z2)" and storing answer
+        # inside a2
+
+        self.a2 = self.activation_function(self.z2)
+
+        # Matrix(z3) =  Matrix(a2) * Matrix(W2)
+
+        self.z3 = np.dot(self.a2, self.W2)
+
+        # yHat is the predicted Output Matrix
+        # for given input Matrix(X) using random data
+
+
+        yHat = self.activation_function(self.z3)
+
+        return yHat
