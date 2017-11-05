@@ -95,7 +95,7 @@ class NeuralNetwork(object):
         self.z3 = np.dot(self.a2, self.W2)
 
         # yHat is the predicted Output Matrix
-        # for given input Matrix(X) using random data
+        # for given input Matrix(X) using random weighted Synapses W1,W2
 
 
         yHat = self.activation_function(self.z3)
